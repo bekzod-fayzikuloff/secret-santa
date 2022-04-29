@@ -7,25 +7,28 @@ repos:
     -   id: check-yaml
     -   id: check-added-large-files
 
--   repo: local
+-   repo: https://github.com/psf/black
+    rev: 21.12b0
     hooks:
     -   id: black
         name: black
-        entry: bash -c 'cd backend && poetry shell && poetry run black src'
-        language: system
+        entry: bash -c 'cd backend && poetry run black src'
+        language_version: python3.8
 
--   repo: local
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
     hooks:
     -   id: isort
         name: isort
         files: "\\.(py)$"
         entry: bash -c 'cd backend && poetry run isort src'
-        language: system
+        language_version: python3
 
--   repo: local
+-   repo: https://github.com/PyCQA/flake8
+    rev: 4.0.1
     hooks:
     -   id: flake8
         name: flake8
         entry: bash -c 'cd backend && poetry run flake8 src'
         always_run: true
-        language: system
+        language_version: python3
