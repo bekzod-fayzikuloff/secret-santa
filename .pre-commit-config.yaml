@@ -12,7 +12,7 @@ repos:
     hooks:
     -   id: black
         name: black
-        entry: bash -c 'cd backend && poetry run black src'
+        entry: bash -c 'cd backend && black src'
         language_version: python3.8
 
 -   repo: https://github.com/PyCQA/isort
@@ -21,7 +21,7 @@ repos:
     -   id: isort
         name: isort
         files: "\\.(py)$"
-        entry: bash -c 'cd backend && poetry run isort src'
+        entry: bash -c 'cd backend && isort src'
         language_version: python3
 
 -   repo: https://github.com/PyCQA/flake8
@@ -29,6 +29,6 @@ repos:
     hooks:
     -   id: flake8
         name: flake8
-        entry: bash -c 'cd backend && poetry run flake8 src'
+        entry: bash -c 'cd backend && flake8 src'
         always_run: true
         language_version: python3
