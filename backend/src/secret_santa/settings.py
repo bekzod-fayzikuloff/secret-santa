@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,14 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+########
+# DOCS #
+########
+
+DOCS_TITLE = os.environ.get("DOCS_TITLE")
+DOCS_VERSION = os.environ.get("DOCS_VERSION")
+DOCS_DESCRIPTION = os.environ.get("DOCS_DESCRIPTION")
+DOCS_TERMS_OF_SERVICE = os.environ.get("DOCS_TERMS_OF_SERVICE")
+DOCS_CONTACT = os.environ.get("DOCS_CONTACT")
+DOCS_LICENSE = os.environ.get("DOCS_LICENSE")
