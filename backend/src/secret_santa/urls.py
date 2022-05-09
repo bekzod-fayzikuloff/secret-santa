@@ -9,7 +9,14 @@ docs_urlpatterns = [
     re_path(r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
 
+
+api_patterns = [
+    path("", include("apps.api.urls")),
+    path("docs/", include(docs_urlpatterns)),
+]
+
+
 urlpatterns = [
-    path("", include(docs_urlpatterns)),
+    path("api/", include(api_patterns)),
     path("admin/", admin.site.urls),
 ]
