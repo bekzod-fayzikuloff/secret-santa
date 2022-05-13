@@ -133,8 +133,6 @@ class TestUserViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["first_name"], updated_name)
 
-        # response = self.client.put(url, "")
-
     def test_partial_update_user(self):
         """
         Test partial update user
