@@ -5,6 +5,11 @@ from .box_serializers import (  # noqa
     BoxRetrieveSerializer,
     BoxUpdateSerializer,
 )
+from .chat_serializers import (  # noqa
+    ChatSerializer,
+    CreateMessageSerializer,
+    RetrieveMessageSerializer,
+)
 from .questionary_serializers import (  # noqa
     ListQuestionarySerializer,
     UpdateQuestionarySerializer,

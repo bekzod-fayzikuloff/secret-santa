@@ -4,14 +4,17 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.request import HttpRequest
 from rest_framework.response import Response
 
-from .models import Box, Questionary, User
+from .models import Box, Message, Questionary, SecretChat, User
 from .serializers import (
     BoxCreateSerializer,
     BoxListSerializer,
     BoxMemberJoinSerializer,
     BoxRetrieveSerializer,
     BoxUpdateSerializer,
+    ChatSerializer,
+    CreateMessageSerializer,
     ListQuestionarySerializer,
+    RetrieveMessageSerializer,
     UpdateQuestionarySerializer,
     UserSerializer,
 )
@@ -94,6 +97,51 @@ class BoxViewSet(
 
         questionary_data = self.serializer_class(questionary).data
         return Response(questionary_data)
+
+    @action(
+        methods=["GET", "POST"],
+        detail=True,
+        serializer_class=CreateMessageSerializer,
+    )
+    def chat(self, request: HttpRequest, pk: str) -> Response:
+        box = get_object_or_404(self.queryset, pk=pk)
+        chat = get_object_or_404(SecretChat, to_box=box)
+
+        if self.request.method == "POST":
+            serializer = self.serializer_class(data=self.request.data)
+
+            if serializer.is_valid():
+                serializer.save(to_chat=chat, message_from=None)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        chat_data = ChatSerializer(chat).data
+
+        return Response(chat_data)
+
+    @action(
+        methods=["GET", "PUT", "PATCH"],
+        detail=True,
+        url_path=r"chat/messages/(?P<message_id>\w+)",
+        serializer_class=CreateMessageSerializer,
+    )
+    def message_detail(self, request: HttpRequest, pk: str, message_id) -> Response:
+        chat = get_object_or_404(SecretChat, to_box_id=pk)
+        message = get_object_or_404(Message, pk=message_id, to_chat=chat)
+
+        if self.request.method in ("POST", "PUT"):
+            serializer = self.serializer_class(data=self.request.data)
+            if serializer.is_valid():
+                message.content = serializer.validated_data["content"]
+                message.save()
+                message_data = CreateMessageSerializer(message).data
+                return Response(message_data)
+
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        message_data = RetrieveMessageSerializer(message).data
+        return Response(message_data)
 
     def get_serializer_class(self):
         actions = {

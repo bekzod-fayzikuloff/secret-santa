@@ -90,7 +90,7 @@ class SecretChat(models.Model):
 class Message(models.Model):
     to_chat = models.ForeignKey(SecretChat, on_delete=models.CASCADE)
     content = models.TextField(max_length=1000)
-    message_from = models.ForeignKey(User, on_delete=models.CASCADE)
+    message_from = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:
