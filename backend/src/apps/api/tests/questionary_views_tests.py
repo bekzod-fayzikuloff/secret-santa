@@ -16,7 +16,9 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         self.fake = Faker()
         box_manager = User.objects.create(
-            first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email()
+            first_name=self.fake.first_name(),
+            last_name=self.fake.last_name(),
+            email=self.fake.email(),
         )
         self.box = Box.objects.create(
             title=self.fake.iban(),
@@ -26,10 +28,14 @@ class TestBoxQuestionaryViewSet(APITestCase):
             manager=box_manager,
         )
         self.questionary_maker = User.objects.create(
-            first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email()
+            first_name=self.fake.first_name(),
+            last_name=self.fake.last_name(),
+            email=self.fake.email(),
         )
         self.questionary = Questionary.objects.create(
-            to_box=self.box, maker=self.questionary_maker, content=self.fake.paragraph(nb_sentences=5)
+            to_box=self.box,
+            maker=self.questionary_maker,
+            content=self.fake.paragraph(nb_sentences=5),
         )
 
         self.client = APIClient()
@@ -67,7 +73,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         # GET /boxes/{pk:uuid}/questionnaires/{questionary_id:int}/
 
-        url = reverse("boxes-questionary-detail", kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk})
+        url = reverse(
+            "boxes-questionary-detail",
+            kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk},
+        )
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -80,7 +89,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         # GET /boxes/{pk:uuid}/questionnaires/{questionary_id:int}/
 
-        url = reverse("boxes-questionary-detail", kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk})
+        url = reverse(
+            "boxes-questionary-detail",
+            kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk},
+        )
         Questionary.objects.all().delete()
 
         response = self.client.get(url)
@@ -137,7 +149,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         # DELETE /boxes/{pk:uuid}/questionnaires/{questionary_id:int}/
 
-        url = reverse("boxes-questionary-detail", kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk})
+        url = reverse(
+            "boxes-questionary-detail",
+            kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk},
+        )
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -150,7 +165,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         # DELETE /boxes/{pk:uuid}/questionnaires/{questionary_id:int}/
 
-        url = reverse("boxes-questionary-detail", kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk})
+        url = reverse(
+            "boxes-questionary-detail",
+            kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk},
+        )
         Questionary.objects.all().delete()
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -162,7 +180,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         # PUT /boxes/{pk:uuid}/questionnaires/{questionary_id:int}/
 
-        url = reverse("boxes-questionary-detail", kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk})
+        url = reverse(
+            "boxes-questionary-detail",
+            kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk},
+        )
 
         update_data = {"content": "Some text"}
         response = self.client.put(url, update_data)
@@ -177,7 +198,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         # PATCH /boxes/{pk:uuid}/questionnaires/{questionary_id:int}/
 
-        url = reverse("boxes-questionary-detail", kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk})
+        url = reverse(
+            "boxes-questionary-detail",
+            kwargs={"pk": self.box.pk, "questionary_id": self.questionary.pk},
+        )
 
         update_data = {"content": "Some text"}
         response = self.client.patch(url, update_data)

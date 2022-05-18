@@ -1,9 +1,12 @@
+import copy
+
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import HttpRequest
 from rest_framework.response import Response
 
+from ..core.tasks import email_notification
 from .models import Box, Message, Questionary, SecretChat, User
 from .serializers import (
     BoxCreateSerializer,
@@ -50,6 +53,11 @@ class BoxViewSet(
         if serializer.is_valid():
             new_member = serializer.save()
             box.members.add(new_member)
+
+            message_data = copy.deepcopy(serializer.data)
+            message_data["box_id"] = box.pk
+            email_notification.delay(message_data)
+
             return Response(status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)

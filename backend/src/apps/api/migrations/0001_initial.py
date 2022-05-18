@@ -17,7 +17,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Box",
             fields=[
-                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
                 ("title", models.CharField(max_length=255)),
                 ("price_range", models.PositiveIntegerField()),
                 ("last_join_data", models.DateField()),
@@ -31,7 +39,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="User",
             fields=[
-                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
                 ("first_name", models.CharField(max_length=120)),
                 ("last_name", models.CharField(max_length=120)),
                 ("email", models.EmailField(max_length=120)),
@@ -44,18 +60,33 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="TossResult",
             fields=[
-                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ("box", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.box")),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "box",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.box"),
+                ),
                 (
                     "get_from",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="get_from", to="api.user"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="get_from",
+                        to="api.user",
                     ),
                 ),
                 (
                     "present_to",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="present_to", to="api.user"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="present_to",
+                        to="api.user",
                     ),
                 ),
             ],
@@ -67,8 +98,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="SecretChat",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("to_box", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.box")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "to_box",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.box"),
+                ),
             ],
             options={
                 "verbose_name": "secret_chat",
@@ -78,13 +120,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Questionary",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("content", models.TextField(max_length=1000)),
-                ("maker", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.user")),
+                (
+                    "maker",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.user"),
+                ),
                 (
                     "to_box",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="questionary", to="api.box"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questionary",
+                        to="api.box",
                     ),
                 ),
             ],
@@ -96,11 +151,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Message",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("content", models.TextField(max_length=1000)),
                 ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
-                ("message_from", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.user")),
-                ("to_chat", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.secretchat")),
+                (
+                    "message_from",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.user"),
+                ),
+                (
+                    "to_chat",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.secretchat"),
+                ),
             ],
             options={
                 "verbose_name": "message",
@@ -110,7 +179,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="box",
             name="manager",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="boxes", to="api.user"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="boxes",
+                to="api.user",
+            ),
         ),
         migrations.AddField(
             model_name="box",

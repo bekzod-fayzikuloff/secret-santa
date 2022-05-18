@@ -15,12 +15,19 @@ class Migration(migrations.Migration):
             model_name="box",
             name="box_state",
             field=models.CharField(
-                choices=[("OP", "Open"), ("DU", "During"), ("CO", "Completed")], default="OP", max_length=2
+                choices=[("OP", "Open"), ("DU", "During"), ("CO", "Completed")],
+                default="OP",
+                max_length=2,
             ),
         ),
         migrations.AlterField(
             model_name="message",
             name="message_from",
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="api.user"),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="api.user",
+            ),
         ),
     ]

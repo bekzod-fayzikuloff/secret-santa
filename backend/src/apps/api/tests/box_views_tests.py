@@ -17,7 +17,9 @@ class TestBoxViewSet(APITestCase):
         """
         self.fake = Faker()
         self.box_manager = User.objects.create(
-            first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email()
+            first_name=self.fake.first_name(),
+            last_name=self.fake.last_name(),
+            email=self.fake.email(),
         )
         self.box = Box.objects.create(
             title=self.fake.iban(),

@@ -36,7 +36,11 @@ class TestUserViewSet(APITestCase):
         url = reverse("users-list")
         User.objects.bulk_create(
             [
-                User(first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email())
+                User(
+                    first_name=self.fake.first_name(),
+                    last_name=self.fake.last_name(),
+                    email=self.fake.email(),
+                )
                 for _ in range(4)
             ]
         )
