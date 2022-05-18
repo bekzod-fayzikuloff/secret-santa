@@ -1,0 +1,26 @@
+version: "3.5"
+
+services:
+  app:
+    command: bash -c "cd src && poetry run python manage.py migrate && poetry run python manage.py runserver 0.0.0.0:8000"
+    build: .
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5433:5432"  # 5432 PORT in my PC already bind
+    env_file:
+      - ./.env
+
+volumes:
+  postgres_data:
