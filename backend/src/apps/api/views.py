@@ -155,8 +155,12 @@ class BoxViewSet(
 
     @action(methods=["GET"], detail=True)
     def toss(self, request: HttpRequest, pk: str) -> Response:
-        service = TossService()
         box = get_object_or_404(self.queryset, pk=pk)
+
+        if self.request.headers.get("authorization") != str(box.manager.pk):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        service = TossService()
 
         toss_result = service.toss(box)
         if isinstance(toss_result, str):
@@ -167,6 +171,10 @@ class BoxViewSet(
     @action(methods=["GET"], detail=True, name="toss-result")
     def toss_result(self, request: HttpRequest, pk: str) -> Response:
         box = get_object_or_404(self.queryset, pk=pk)
+
+        if self.request.headers.get("authorization") != str(box.manager.pk):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
         tosses = TossResult.objects.filter(box=box)
         serializer = TossResultSerializer(tosses, many=True).data
 
