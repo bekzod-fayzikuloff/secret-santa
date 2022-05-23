@@ -20,6 +20,7 @@ from .serializers import (
     RetrieveMessageSerializer,
     TossResultSerializer,
     UpdateQuestionarySerializer,
+    UserRetrieveSerializer,
     UserSerializer,
 )
 from .services.toss import TossService
@@ -34,6 +35,12 @@ class UserViewSet(
 ):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        actions = {
+            "retrieve": UserRetrieveSerializer,
+        }
+        return actions.get(self.action, self.serializer_class)
 
 
 class BoxViewSet(
