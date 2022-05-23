@@ -7,7 +7,7 @@ from rest_framework.request import HttpRequest
 from rest_framework.response import Response
 
 from ..core.tasks import email_notification
-from .models import Box, Message, Questionary, SecretChat, User
+from .models import Box, Message, Questionary, SecretChat, TossResult, User
 from .serializers import (
     BoxCreateSerializer,
     BoxListSerializer,
@@ -18,9 +18,11 @@ from .serializers import (
     CreateMessageSerializer,
     ListQuestionarySerializer,
     RetrieveMessageSerializer,
+    TossResultSerializer,
     UpdateQuestionarySerializer,
     UserSerializer,
 )
+from .services.toss import TossService
 
 
 class UserViewSet(
@@ -150,6 +152,25 @@ class BoxViewSet(
 
         message_data = RetrieveMessageSerializer(message).data
         return Response(message_data)
+
+    @action(methods=["GET"], detail=True)
+    def toss(self, request: HttpRequest, pk: str) -> Response:
+        service = TossService()
+        box = get_object_or_404(self.queryset, pk=pk)
+
+        toss_result = service.toss(box)
+        if isinstance(toss_result, str):
+            return Response(toss_result)
+
+        return Response({"message": "tossed"}, status=status.HTTP_200_OK)
+
+    @action(methods=["GET"], detail=True, name="toss-result")
+    def toss_result(self, request: HttpRequest, pk: str) -> Response:
+        box = get_object_or_404(self.queryset, pk=pk)
+        tosses = TossResult.objects.filter(box=box)
+        serializer = TossResultSerializer(tosses, many=True).data
+
+        return Response(serializer)
 
     def get_serializer_class(self):
         actions = {

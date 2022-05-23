@@ -9,4 +9,5 @@ from .chat_serializers import CreateMessageSerializer  # noqa
 from .chat_serializers import ChatSerializer, RetrieveMessageSerializer  # noqa
 from .questionary_serializers import ListQuestionarySerializer  # noqa
 from .questionary_serializers import UpdateQuestionarySerializer  # noqa
+from .toss_serializers import TossResultSerializer  # noqa
 from .user_serializers import UserSerializer  # noqa
