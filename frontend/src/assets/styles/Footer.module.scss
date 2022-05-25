@@ -1,0 +1,20 @@
+.container {
+  font-family: 'Work Sans', sans-serif;
+  color: aliceblue;
+  background-color: #191b2a;
+  height: 200px;
+  width: 100%;
+
+  .footer_title {
+    padding: 15px;
+    font-size: 3vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer_description {
+    font-size: 2vh;
+    display: flex;
+    justify-content: center;
+  }
+}
