@@ -1,9 +1,12 @@
 import React from 'react'
 import style from './../../assets/styles/Header.module.scss'
+import { useNavigate } from 'react-router-dom'
 
 function HeaderIcon() {
+  const navigate = useNavigate()
   return (
     <svg
+      onClick={() => navigate('/')}
       className={style.headline_icon}
       xmlns="http://www.w3.org/2000/svg"
       width="462.403"
