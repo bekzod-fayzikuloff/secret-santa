@@ -25,7 +25,13 @@ class BoxCreateSerializer(BoxBaseSerializer):
     manager = UserSerializer()
 
     class Meta(BoxBaseSerializer.Meta):
-        fields = ("title", "price_range", "last_join_data", "member_entry_message", "manager")
+        fields = (
+            "title",
+            "price_range",
+            "last_join_data",
+            "member_entry_message",
+            "manager",
+        )
 
     def create(self, validated_data):
         user = User.objects.create(**validated_data["manager"])

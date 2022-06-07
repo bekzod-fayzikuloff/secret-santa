@@ -45,6 +45,8 @@ python-dotenv = "^0.20.0"
 drf-yasg = {extras = ["validation"], version = "^1.20.0"}
 psycopg2-binary = "^2.9.3"
 django-cors-headers = "^3.11.0"
+celery = "^5.2.6"
+redis = "^4.3.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
@@ -53,6 +55,7 @@ pylint = "^2.13.7"
 pre-commit = "^2.18.1"
 flake8 = "^4.0.1"
 Faker = "^13.11.0"
+pytest = "^7.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

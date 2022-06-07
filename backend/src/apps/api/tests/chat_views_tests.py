@@ -16,7 +16,9 @@ class TestBoxQuestionaryViewSet(APITestCase):
         """
         self.fake = Faker()
         box_manager = User.objects.create(
-            first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email()
+            first_name=self.fake.first_name(),
+            last_name=self.fake.last_name(),
+            email=self.fake.email(),
         )
         self.box = Box.objects.create(
             title=self.fake.iban(),
@@ -36,7 +38,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()["messages"]), Message.objects.filter(to_chat__to_box=self.box).count())
+        self.assertEqual(
+            len(response.json()["messages"]),
+            Message.objects.filter(to_chat__to_box=self.box).count(),
+        )
 
     def test_box_chat__not_exist_box(self):
         # GET /boxes/{pk:uuid}/chat/
@@ -80,7 +85,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
     def test_box_chat_message_retrieve(self):
         # GET /boxes/{pk:uuid}/chat/message/{message_id:int}/
 
-        url = reverse("boxes-message-detail", kwargs={"pk": self.box.pk, "message_id": self.message.pk})
+        url = reverse(
+            "boxes-message-detail",
+            kwargs={"pk": self.box.pk, "message_id": self.message.pk},
+        )
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -88,7 +96,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
     def test_box_chat_message_update(self):
         # PUT /boxes/{pk:uuid}/chat/message/{message_id:int}/
 
-        url = reverse("boxes-message-detail", kwargs={"pk": self.box.pk, "message_id": self.message.pk})
+        url = reverse(
+            "boxes-message-detail",
+            kwargs={"pk": self.box.pk, "message_id": self.message.pk},
+        )
 
         put_data = {"content": "new_text"}
         response = self.client.put(url, put_data)
@@ -98,7 +109,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
     def test_box_chat_message_update_failed_case(self):
         # PUT /boxes/{pk:uuid}/chat/message/{message_id:int}/
 
-        url = reverse("boxes-message-detail", kwargs={"pk": self.box.pk, "message_id": self.message.pk})
+        url = reverse(
+            "boxes-message-detail",
+            kwargs={"pk": self.box.pk, "message_id": self.message.pk},
+        )
 
         put_data = {"not_exist_field": "new_text"}
         response = self.client.put(url, put_data)
@@ -107,7 +121,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
     def test_box_chat_message_partial_update(self):
         # PATCH /boxes/{pk:uuid}/chat/message/{message_id:int}/
 
-        url = reverse("boxes-message-detail", kwargs={"pk": self.box.pk, "message_id": self.message.pk})
+        url = reverse(
+            "boxes-message-detail",
+            kwargs={"pk": self.box.pk, "message_id": self.message.pk},
+        )
 
         patch_data = {"content": "new_text"}
         response = self.client.patch(url, patch_data)
@@ -116,7 +133,10 @@ class TestBoxQuestionaryViewSet(APITestCase):
     def test_box_chat_message_partial_update_failed_case(self):
         # PUT /boxes/{pk:uuid}/chat/message/{message_id:int}/
 
-        url = reverse("boxes-message-detail", kwargs={"pk": self.box.pk, "message_id": self.message.pk})
+        url = reverse(
+            "boxes-message-detail",
+            kwargs={"pk": self.box.pk, "message_id": self.message.pk},
+        )
 
         patch_data = {"not_exist_field": "new_text"}
         response = self.client.put(url, patch_data)

@@ -1,10 +1,13 @@
+import copy
+
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import HttpRequest
 from rest_framework.response import Response
 
-from .models import Box, Message, Questionary, SecretChat, User
+from ..core.tasks import email_notification
+from .models import Box, Message, Questionary, SecretChat, TossResult, User
 from .serializers import (
     BoxCreateSerializer,
     BoxListSerializer,
@@ -15,9 +18,12 @@ from .serializers import (
     CreateMessageSerializer,
     ListQuestionarySerializer,
     RetrieveMessageSerializer,
+    TossResultSerializer,
     UpdateQuestionarySerializer,
+    UserRetrieveSerializer,
     UserSerializer,
 )
+from .services.toss import TossService
 
 
 class UserViewSet(
@@ -29,6 +35,12 @@ class UserViewSet(
 ):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        actions = {
+            "retrieve": UserRetrieveSerializer,
+        }
+        return actions.get(self.action, self.serializer_class)
 
 
 class BoxViewSet(
@@ -50,6 +62,11 @@ class BoxViewSet(
         if serializer.is_valid():
             new_member = serializer.save()
             box.members.add(new_member)
+
+            message_data = copy.deepcopy(serializer.data)
+            message_data["box_id"] = box.pk
+            email_notification.delay(message_data)
+
             return Response(status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -142,6 +159,33 @@ class BoxViewSet(
 
         message_data = RetrieveMessageSerializer(message).data
         return Response(message_data)
+
+    @action(methods=["GET"], detail=True)
+    def toss(self, request: HttpRequest, pk: str) -> Response:
+        box = get_object_or_404(self.queryset, pk=pk)
+
+        if self.request.headers.get("authorization") != str(box.manager.pk):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        service = TossService()
+
+        toss_result = service.toss(box)
+        if isinstance(toss_result, str):
+            return Response(toss_result)
+
+        return Response({"message": "tossed"}, status=status.HTTP_200_OK)
+
+    @action(methods=["GET"], detail=True, name="toss-result")
+    def toss_result(self, request: HttpRequest, pk: str) -> Response:
+        box = get_object_or_404(self.queryset, pk=pk)
+
+        if self.request.headers.get("authorization") != str(box.manager.pk):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        tosses = TossResult.objects.filter(box=box)
+        serializer = TossResultSerializer(tosses, many=True).data
+
+        return Response(serializer)
 
     def get_serializer_class(self):
         actions = {

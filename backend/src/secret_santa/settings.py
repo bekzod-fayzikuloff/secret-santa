@@ -152,3 +152,19 @@ DOCS_DESCRIPTION = os.environ.get("DOCS_DESCRIPTION")
 DOCS_TERMS_OF_SERVICE = os.environ.get("DOCS_TERMS_OF_SERVICE")
 DOCS_CONTACT = os.environ.get("DOCS_CONTACT")
 DOCS_LICENSE = os.environ.get("DOCS_LICENSE")
+
+##########
+# CELERY #
+##########
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+
+#########
+# EMAIL #
+#########
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_SSL = bool(int(os.environ.get("EMAIL_USE_SSL", 0)))
+EMAIL_USE_TLS = not EMAIL_USE_SSL

@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient, APITestCase
 
+from ...core.resources import BoxState
 from ..models import Box, User
 from ..serializers import BoxUpdateSerializer
 
@@ -17,7 +18,9 @@ class TestBoxViewSet(APITestCase):
         """
         self.fake = Faker()
         self.box_manager = User.objects.create(
-            first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email()
+            first_name=self.fake.first_name(),
+            last_name=self.fake.last_name(),
+            email=self.fake.email(),
         )
         self.box = Box.objects.create(
             title=self.fake.iban(),
@@ -222,3 +225,110 @@ class TestBoxViewSet(APITestCase):
         response = self.client.post(url, member_data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_box_toss_action_view__send_request_without_auth_header(self):
+        """
+        Test `toss action` exist box
+        Permission : manager only
+        """
+        # POST /boxes/{pk:uuid}/toss/
+
+        url = reverse("boxes-toss", kwargs={"pk": self.box.pk})
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_box_toss_action_view__send_request_with_auth_header(self):
+        """
+        Test `toss action` exist box
+        Permission : manager only
+        """
+        # POST /boxes/{pk:uuid}/toss/
+
+        url = reverse("boxes-toss", kwargs={"pk": self.box.pk})
+
+        self.client.credentials(HTTP_AUTHORIZATION=str(self.box.manager.pk))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_box_toss_action_view__send_request_with_auth_header_members_count(self):
+        """
+        Test `toss action` exist box
+        Permission : manager only
+        """
+        # POST /boxes/{pk:uuid}/toss/
+
+        url = reverse("boxes-toss", kwargs={"pk": self.box.pk})
+
+        members = User.objects.bulk_create(
+            [
+                User(first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email())
+                for _ in range(4)
+            ]
+        )
+        for member in members:
+            self.box.members.add(member)
+
+        self.client.credentials(HTTP_AUTHORIZATION=str(self.box.manager.pk))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), {"message": "tossed"})
+
+    def test_box_toss_action_view__send_request_with_auth_header_closed_game(self):
+        """
+        Test `toss action` exist box
+        Permission : manager only
+        """
+        # POST /boxes/{pk:uuid}/toss/
+
+        url = reverse("boxes-toss", kwargs={"pk": self.box.pk})
+
+        members = User.objects.bulk_create(
+            [
+                User(first_name=self.fake.first_name(), last_name=self.fake.last_name(), email=self.fake.email())
+                for _ in range(3)
+            ]
+        )
+        for member in members:
+            self.box.members.add(member)
+
+        self.box.box_state = BoxState.CLOSE.value
+        self.box.save()
+
+        self.client.credentials(HTTP_AUTHORIZATION=str(self.box.manager.pk))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), "Game already close")
+
+    def test_box_toss_result_action_view__with_auth(self):
+        """
+        Test `toss-result` exist box
+        Permission : manager only
+        """
+        # POST /boxes/{pk:uuid}/toss-result/
+
+        url = reverse("boxes-toss-result", kwargs={"pk": self.box.pk})
+
+        self.client.credentials(HTTP_AUTHORIZATION=str(self.box.manager.pk))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), [])
+
+    def test_box_toss_result_action_view__invalid_auth(self):
+        """
+        Test `toss-result` exist box
+        Permission : manager only
+        """
+        # POST /boxes/{pk:uuid}/toss-result/
+
+        url = reverse("boxes-toss-result", kwargs={"pk": self.box.pk})
+
+        self.client.credentials(HTTP_AUTHORIZATION=uuid.uuid4().hex)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
