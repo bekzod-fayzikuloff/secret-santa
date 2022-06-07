@@ -1,0 +1,12 @@
+.alert {
+  margin: 0 30% 2vh;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1.5px solid #f31818;
+  font-weight: 500;
+  transition-delay: 0.1s;
+}
+.alert:hover {
+  background-color: #f31818;
+  color: #ffffff;
+}
