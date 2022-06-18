@@ -32,13 +32,16 @@ export interface IUser {
 
 export default function BoxPage() {
   const { userUUID }: UserUUID = useParams()
+  const [user, setUser] = useState<IUser>({})
   const [isExistUser, setExistUser] = useState(true)
 
   useEffect(() => {
     async function fetchData() {
       await axios
         .get(`${process.env.REACT_APP_API_PATH}users/${userUUID}`)
-        .then((res) => {})
+        .then((res) => {
+          setUser(res.data)
+        })
         .catch((reason: AxiosError) => {
           if (reason.response?.status === 404) {
             setExistUser(false)
@@ -48,5 +51,5 @@ export default function BoxPage() {
     fetchData().then()
   }, [])
 
-  return <React.Fragment>{isExistUser ? <Outlet /> : <NotFoundPage />}</React.Fragment>
+  return <React.Fragment>{isExistUser ? <Outlet context={user}/> : <NotFoundPage />}</React.Fragment>
 }

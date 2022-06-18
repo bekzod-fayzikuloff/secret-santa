@@ -7,6 +7,9 @@ import BoxPage from './pages/BoxPage'
 import RulesPage from './pages/RulesPage'
 import NotFoundPage from './pages/NotFoundPage'
 import MainBoxPage from './components/Box/MainBoxPage'
+import {BoxChatPage} from "./pages/BoxChatPage";
+import BoxQuestionaryPage from "./pages/BoxQuestionaryPage";
+import BoxGamePage from "./pages/BoxGamePage";
 
 function App() {
   const navigate = useNavigate()
@@ -20,9 +23,9 @@ function App() {
           <Route path="u/:userUUID/" element={<BoxPage />}>
             <Route element={<MainBoxPage navigate={navigate} />}>
               <Route index element={<h1>Hello</h1>} />
-              <Route path="game" element={<p>Game</p>} />
-              <Route path="questionary" element={<p>Questionary</p>} />
-              <Route path="chat" element={<p>Chat</p>} />
+              <Route path="game" element={<BoxGamePage />} />
+              <Route path="questionary" element={<BoxQuestionaryPage />} />
+              <Route path="chat" element={<BoxChatPage />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />

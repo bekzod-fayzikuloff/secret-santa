@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Alert from './Alert'
 
-interface FormEvent<T = Element> extends SyntheticEvent<T> {
+export interface FormEvent<T = Element> extends SyntheticEvent<T> {
   target: any
 }
 
