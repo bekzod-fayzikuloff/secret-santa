@@ -36,6 +36,12 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    @action(["GET"], detail=True)
+    def questionary(self, request: HttpRequest, pk: str):
+        user_questionary = get_object_or_404(Questionary, maker_id=pk)
+        questionary_data = ListQuestionarySerializer(user_questionary).data
+        return Response(questionary_data)
+
     def get_serializer_class(self):
         actions = {
             "retrieve": UserRetrieveSerializer,

@@ -28,4 +28,4 @@ class UserRetrieveSerializer(BaseUserSerializer):
         return BoxListSerializer(Box.objects.get(members__exact=user)).data
 
     class Meta(BaseUserSerializer.Meta):
-        fields = ("first_name", "last_name", "email", "box")
+        fields = ("id", "first_name", "last_name", "email", "box")
